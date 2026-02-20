@@ -1,0 +1,66 @@
+# Lab Standards (DeepSeek Standard)
+
+The canonical quality bar for all labs in this system.
+
+## Required Files Per Lab
+
+```
+labs/[chapter]/lab-NN-[name]/
+├── workbook.md
+├── initial-configs/   R1.cfg, R2.cfg, ...
+├── solutions/         R1.cfg, R2.cfg, ...
+├── topology.drawio
+├── topology.png
+├── setup_lab.py
+└── scripts/fault-injection/
+    ├── README.md
+    ├── inject_scenario_01.py
+    ├── inject_scenario_02.py
+    ├── inject_scenario_03.py
+    └── apply_solution.py
+```
+
+## Workbook Sections (Required)
+
+| # | Section | Notes |
+|---|---------|-------|
+| 1 | Concepts & Skills Covered | |
+| 2 | Topology & Scenario | Narrative enterprise context |
+| 3 | Hardware & Environment Specifications | Must include Console Access Table + Cabling Table |
+| 4 | Base Configuration | |
+| 5 | Lab Challenge: Core Implementation | Challenge-first, no step hints |
+| 6 | Verification & Analysis | |
+| 7 | Verification Cheatsheet | |
+| 8 | Troubleshooting Scenarios | Min 3, each with fault-injection reference |
+| 9 | Solutions (Spoiler Alert!) | All in `<details>` blocks |
+| 10 | Lab Completion Checklist | |
+| 11 | Automated Fault Injection | When scripts exist |
+
+## Voice & Tone
+
+- **Narrative-first**: "As the lead network engineer for Acme Corp, you must..."
+- **Cisco official terminology**: "Feasible Successor", "Administrative Distance"
+- **Challenge-first**: No step-by-step hints until the hidden solution section
+
+## Diagram Standards
+
+- White connection lines (`strokeColor=#FFFFFF`) — never black
+- Cisco shape library icons (`mxgraph.cisco.routers.router`)
+- Device label: hostname + role + loopback IP
+- IP last-octet labels near each interface
+- Legend box: black fill, white text, bottom-right
+
+## Config Chaining Rules
+
+- Lab 01 `initial-configs/` = IP addressing only from `baseline.yaml`
+- Lab N `initial-configs/` = Lab (N-1) `solutions/`
+- **Never remove** a config command between labs — only add
+
+## Troubleshooting Scenario Requirements
+
+Each of the 3+ scenarios must have:
+1. Problem Statement (observable symptoms)
+2. Mission (what to diagnose/fix)
+3. Success Criteria (measurable checkboxes)
+4. Solution in `<details>` spoiler block
+5. Reference to `scripts/fault-injection/inject_scenario_0N.py`
