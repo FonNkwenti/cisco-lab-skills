@@ -344,13 +344,6 @@ D    10.3.0.0/24 [90/156160] via 10.13.0.2, 00:01:40, Fa1/0   ! ← AD=90, metri
 | R1 | 5001 | `telnet 127.0.0.1 5001` |
 | R2 | 5002 | `telnet 127.0.0.1 5002` |
 
---# Step 3: Generate initial-configs/
-
-- **Lab 01:** Generate base IP addressing from `baseline.yaml core_topology` (IP config only — no routing protocol config).
-- **Lab N (N > 1, not capstone):** Copy exactly from Lab (N-1) `solutions/`. Do not modify.
-- **Capstone I or Capstone II (`clean_slate: true`):** Generate from `baseline.yaml core_topology` IP addressing only — do NOT copy previous lab solutions. All routing protocol config is absent; the student configures everything from scratch.
-- One `.cfg` file per active device, named `[Device].cfg`.
-
 **Capstone workbook Section 5 format:**
 
 For `capstone_i`, Section 5 heading and opening must be:
@@ -371,33 +364,69 @@ For `capstone_ii`, Section 5 heading and opening must be:
 > No step-by-step guidance is provided — work from symptoms only.
 ```
 
+--# Step 3: Generate initial-configs/
+
+- **Lab 01:** Generate base IP addressing from `baseline.yaml core_topology` (IP config only — no routing protocol config).
+- **Lab N (N > 1, not capstone):** Copy exactly from Lab (N-1) `solutions/`. Do not modify.
+- **Capstone I or Capstone II (`clean_slate: true`):** Generate from `baseline.yaml core_topology` IP addressing only — do NOT copy previous lab solutions. All routing protocol config is absent; the student configures everything from scratch.
+- One `.cfg` file per active device, named `[Device].cfg`.
+
 --# Step 4: Generate solutions/
 
 Complete IOS configurations for every active device, implementing all lab objectives. One `.cfg` file per device.
 
 --# Step 5: Generate topology.drawio
 
-**STOP. Before writing a single line of XML, read `.agent/skills/drawio/SKILL.md` §4.2–§4.7 in full.**
+Dispatch a **single subagent** (general-purpose) to write the topology diagram. This isolates the 328-line drawio/SKILL.md read from main context.
 
-Use the §4.7 reference XML snippets as your starting template. Never write topology XML from scratch — always copy and adapt the reference snippets for Device Icon, Device Label, White Connection Line, IP Last Octet Label, and Legend Box.
+Fill in all [bracketed] placeholders before dispatching.
 
-**Mandatory pre-write checklist (verify against drawio/SKILL.md before writing):**
-- [ ] Device shape: `shape=mxgraph.cisco.routers.router;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;` — not a rectangle
-- [ ] Device labels: separate `text` cells positioned on the empty side of the icon (§4.3.1) — not embedded in the router cell value
-- [ ] Connection lines: `strokeColor=#FFFFFF;strokeWidth=2` — white, never default black
-- [ ] IP last-octet labels: separate `edgeLabel` cells (`.1`, `.2`) near each interface endpoint — not embedded in the edge label string
-- [ ] Legend box: black fill `#000000`, white text `#FFFFFF`, bottom-right corner — not colored boxes matching router fills
-- [ ] Title: bold, 16pt, top center
+---SUBAGENT: Topology Diagram (general-purpose)---
 
-**Mandatory post-write validation checklist (run after writing the XML):**
-- [ ] Open the file mentally and verify every router cell uses `mxgraph.cisco.routers.router` shape
-- [ ] Every router has a separate label cell — no hostname/role/loopback text in the router cell `value=`
-- [ ] Every edge has `strokeColor=#FFFFFF` in its style string
-- [ ] Every interface endpoint has a standalone `.N` octet cell parented to `"1"` (canvas root)
-- [ ] Legend is a single cell with `fillColor=#000000;fontColor=#FFFFFF` at bottom-right
-- [ ] The `.drawio` file is the only required diagram artifact — no PNG export needed
+Prompt:
 
-If any checklist item fails, fix it before moving to Step 6. Do not mark topology complete with known violations.
+You are generating a topology.drawio diagram for a CCNP ENARSI GNS3 lab.
+
+## Task
+Write Draw.io XML to:
+  labs/[chapter]/[lab-path]/topology.drawio
+
+## MANDATORY FIRST ACTION
+Read .agent/skills/drawio/SKILL.md in full — especially §4.2–§4.7.
+Use the §4.7 reference XML snippets as your starting template.
+Never write topology XML from scratch.
+
+## Read After drawio/SKILL.md
+1. labs/[chapter]/baseline.yaml — devices (IPs, roles, loopbacks) and links (subnets)
+2. labs/[chapter]/[lab-path]/workbook.md — Section 2 ASCII diagram as layout reference
+
+## Active Devices
+[fill from baseline.yaml labs[N].devices — e.g. R1 (Hub), R2 (Branch A), R3 (Branch B)]
+
+## Links
+[fill from baseline.yaml core_topology.links — e.g. L1: R1 Fa0/0 ↔ R2 Fa0/0, 10.12.0.0/30]
+
+## Layout
+[fill: e.g. Triangle — R1 top center, R2 bottom-left, R3 bottom-right]
+
+## Pre-Write Checklist
+- [ ] drawio/SKILL.md §4.2-§4.7 read; §4.7 XML snippets in context
+- [ ] Router shape: mxgraph.cisco.routers.router — NOT a rectangle
+- [ ] Device labels: separate text cells — NOT embedded in router cell value=
+- [ ] Connection lines: strokeColor=#FFFFFF — NOT default black
+- [ ] IP last-octet labels: separate edgeLabel cells parented to "1"
+- [ ] Legend box: fillColor=#000000, fontColor=#FFFFFF, bottom-right
+
+## Post-Write Checklist (fix before confirming done)
+- [ ] Every router cell uses mxgraph.cisco.routers.router shape
+- [ ] Every router has a separate label cell
+- [ ] Every edge has strokeColor=#FFFFFF
+- [ ] Every interface endpoint has a standalone .N octet cell
+- [ ] Legend present at bottom-right with black fill
+
+## Output Confirmation
+File path, line count, number of router cells, number of edge cells,
+confirmation both checklists pass.
 
 --# Step 6: Generate setup_lab.py
 
@@ -443,12 +472,13 @@ Use `assets/troubleshooting_scenarios_template.md` as the template for Section 9
 
 -# Examples
 
-User: "Generate EIGRP Lab 03 for the ENARSI series."
+User: "Generate EIGRP Lab 06 for the ENARSI series."
 
 Actions:
-1. Read `labs/eigrp/baseline.yaml` — identify Lab 03 devices, objectives, console ports.
-2. Copy `labs/eigrp/lab-02-[name]/solutions/` as `initial-configs/` for Lab 03.
+1. Read `labs/eigrp/baseline.yaml` — identify Lab 06 devices, objectives, console ports.
+2. Copy `labs/eigrp/lab-05-[name]/solutions/` as `initial-configs/` for Lab 06.
 3. Write `workbook.md` with all 10 required sections.
-4. Generate `initial-configs/`, `solutions/`, `topology.drawio`, `setup_lab.py`.
-5. Invoke `drawio` skill to validate topology diagram style.
-6. Invoke `fault-injector` skill to generate `scripts/fault-injection/`.
+4. Generate `initial-configs/` and `solutions/` in main context.
+5. Dispatch drawio subagent (Step 5) to write `topology.drawio`.
+6. Generate `setup_lab.py` in main context.
+7. Invoke `fault-injector` skill to generate `scripts/fault-injection/`.
