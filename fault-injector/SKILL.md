@@ -51,6 +51,25 @@ Use `assets/README_template.md` as the base. Fill in:
 - [ ] All scripts are idempotent (safe to run multiple times)
 - [ ] Console ports match the workbook's Console Access Table
 
+--# Step 6: Update meta.yaml
+
+Update provenance tracking for this lab.
+
+- **If `meta.yaml` already exists** (lab-workbook-creator wrote it): append to `updated[]`:
+  ```yaml
+  updated:
+    - date: "[YYYY-MM-DD]"
+      agent: claude-sonnet-4-6
+      skill: inject-faults
+      skill_version: "[date of .agent/skills HEAD]"
+      files:
+        - scripts/fault-injection/inject_scenario_01.py
+        # ... all inject scripts generated
+        - scripts/fault-injection/apply_solution.py
+        - scripts/fault-injection/README.md
+  ```
+- **If `meta.yaml` does not exist** (standalone run on a pre-existing lab): create it with `created` fields set to today's date and `agent: unknown` to indicate provenance was not tracked at generation time, then add the fault-injection files to `created.files`.
+
 -# Output Structure
 
 ```
@@ -140,3 +159,4 @@ Actions:
 2. For each scenario, generate an `inject_scenario_0N.py` using the template from `assets/`.
 3. Generate `apply_solution.py` to restore all affected devices.
 4. Generate `scripts/fault-injection/README.md` with scenario descriptions.
+5. Update `meta.yaml` (Step 6).

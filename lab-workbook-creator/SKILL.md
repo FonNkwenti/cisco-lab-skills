@@ -444,6 +444,40 @@ After generating the workbook, invoke the `fault-injector` skill to create `scri
 
 Use `assets/troubleshooting_scenarios_template.md` as the template for Section 9 troubleshooting content.
 
+--# Step 8: Write meta.yaml
+
+After the fault-injector skill completes, write `meta.yaml` in the lab directory.
+
+1. Get `skill_version`: run `git -C .agent/skills log --format="%ci" -1` and take the date portion (YYYY-MM-DD).
+2. Get today's date (YYYY-MM-DD).
+3. Glob all files created in this lab directory (recursive, relative paths).
+4. Write `labs/[chapter]/[lab-dir]/meta.yaml`:
+
+```yaml
+# Auto-generated — do not edit manually. Use /tag-lab to stamp external agent runs.
+lab: [lab-dir-name]
+chapter: [chapter]
+created:
+  date: "[YYYY-MM-DD]"
+  agent: claude-sonnet-4-6
+  skill: create-lab
+  skill_version: "[YYYY-MM-DD]"
+  files:
+    - workbook.md
+    - topology.drawio
+    - setup_lab.py
+    - initial-configs/[Device].cfg   # one entry per device
+    - solutions/[Device].cfg          # one entry per device
+    - scripts/fault-injection/inject_scenario_01.py
+    - scripts/fault-injection/inject_scenario_02.py
+    - scripts/fault-injection/inject_scenario_03.py
+    - scripts/fault-injection/apply_solution.py
+    - scripts/fault-injection/README.md
+updated: []
+```
+
+List every file actually created — adjust device names and inject script count to match the lab.
+
 -# Common Issues
 
 --# baseline.yaml not found
@@ -482,3 +516,4 @@ Actions:
 5. Dispatch drawio subagent (Step 5) to write `topology.drawio`.
 6. Generate `setup_lab.py` in main context.
 7. Invoke `fault-injector` skill to generate `scripts/fault-injection/`.
+8. Write `meta.yaml` (Step 8) listing all created files.

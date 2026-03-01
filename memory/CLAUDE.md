@@ -9,6 +9,7 @@
 @skills/chapter-topics-creator/SKILL.md
 @skills/lab-workbook-creator/SKILL.md
 @skills/fault-injector/SKILL.md
+@skills/tag-lab/SKILL.md
 @skills/drawio/SKILL.md
 @skills/gns3/SKILL.md
 @skills/cisco-troubleshooting-1/SKILL.md

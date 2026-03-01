@@ -55,6 +55,14 @@ Write `labs/[chapter]/baseline.yaml` using this schema:
 chapter: [TECHNOLOGY]
 version: 1.0
 
+meta:
+  created:
+    date: "[YYYY-MM-DD]"
+    agent: claude-sonnet-4-6
+    skill: chapter-topics
+    skill_version: "[date of .agent/skills HEAD]"
+  updated: []
+
 # Core devices — present in ALL labs
 core_topology:
   devices:
