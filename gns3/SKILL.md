@@ -57,26 +57,110 @@ This GNS3 environment uses **Dynamips** (Cisco IOS emulation) only.
 - **IOS Image:** `c3725-adventerprisek9-mz.124-15.T14.image`
 - **Idle PC:** `0x60c09aa0`
 
---# 4. Console Port Convention
+--# 4. VPCS (Virtual PC Simulator)
 
-Base port: 5000. Assign sequentially by router number.
+VPCS is a built-in GNS3 node — no IOS image required. Use it as a lightweight end-host for reachability testing, DHCP client simulation, and traceroute verification.
 
-| Router | Console Port | Telnet Command |
+### When to use VPCS
+
+| Condition | Use VPCS |
+|-----------|----------|
+| Verify routing reachability end-to-end | yes |
+| Test DHCP client behaviour | yes |
+| Source pings/traceroutes from a host address | yes |
+| Simulate a server or application workload | no — use a router loopback instead |
+| Any L3 routing function | no — VPCS has no routing stack |
+
+> **Rule:** Add VPCS only when the lab explicitly needs a simulated end-host (e.g., "verify PC1 can reach PC2 across the WAN"). Do not add VPCS by default to every lab.
+
+### VPCS hardware profile
+
+| Property | Value |
+|----------|-------|
+| Node type | VPCS (GNS3 built-in) |
+| Interfaces | `eth0` (single Ethernet) |
+| IOS image | none |
+| RAM | minimal (host process) |
+
+### VPCS command reference
+
+```
+# Assign a static IP
+ip <address>/<prefix-length> <gateway>
+  Example: ip 192.168.10.2/24 192.168.10.1
+
+# Verify assignment
+show ip
+
+# Ping
+ping <destination>
+ping <destination> -c <count> -t <ttl>
+
+# Traceroute
+trace <destination>
+
+# DHCP (obtain address automatically)
+dhcp
+dhcp -t <timeout-seconds>
+
+# Save config across reboots
+save
+```
+
+### Referencing VPCS in baseline.yaml
+
+```yaml
+devices:
+  - name: PC1
+    type: vpcs
+    interfaces:
+      - name: eth0
+        ip: 192.168.10.2/24
+        gateway: 192.168.10.1
+
+links:
+  - "PC1:eth0 ↔ SW1:fa1/1"
+```
+
+### VPCS initial-config format
+
+VPCS startup config is a plain text file (one command per line, no `!` separators):
+
+```
+ip 192.168.10.2/24 192.168.10.1
+save
+```
+
+Place it at `initial-configs/PC1.vpc` (`.vpc` extension, not `.cfg`).
+
+---
+
+--# 5. Console Port Convention
+
+Base port: 5000. Assign sequentially — routers first, then VPCS nodes.
+
+| Device | Console Port | Telnet Command |
 |--------|-------------|----------------|
 | R1 | 5001 | `telnet localhost 5001` |
 | R2 | 5002 | `telnet localhost 5002` |
 | R3 | 5003 | `telnet localhost 5003` |
 | RN | 500N | `telnet localhost 500N` |
+| PC1 | 5020 | `telnet localhost 5020` |
+| PC2 | 5021 | `telnet localhost 5021` |
+| PCN | 502N | `telnet localhost 502N` |
 
---# 5. Design Rules for Lab Generation
+> VPCS ports start at 5020 to leave room for up to 19 routers (5001–5019) without collision.
+
+--# 6. Design Rules for Lab Generation
 
 1. **No high-speed interfaces:** Do not use `TenGig` or `HundredGig`. Use `FastEthernet` or `GigabitEthernet` (gi3/0 on c7200).
 2. **No incompatible technology:** Exclude features requiring IOS-XR, NX-OS, or containerisation.
 3. **Physical link table:** Always define links explicitly in `baseline.yaml` using the format:
    `Source:Interface ↔ Target:Interface`
-4. **Supported node types (non-IOS):** Unmanaged Switch (generic GNS3), VPCS (ping testing only).
-5. **Device count:** Minimum 3 routers, maximum 15 routers per chapter topology (core + optional combined).
+4. **Supported node types (non-IOS):** Unmanaged Switch (generic GNS3 built-in); VPCS (see Section 4 — use only when a simulated end-host is needed, not by default).
+5. **Device count:** Minimum 3 routers, maximum 15 routers per chapter topology (core + optional combined). VPCS nodes do not count toward the router limit.
 6. **Platform-command alignment:** Before generating configs, confirm the IOS image version supports the required syntax. Check `reference-docs/ios-compatibility.yaml`. Named-mode EIGRP and any IOS 15+ feature must use c7200. If a command is `fail` on the target platform, switch to c7200 or find a supported alternative.
+7. **VPCS config files use `.vpc` extension** — never `.cfg`. Place them in `initial-configs/` alongside router configs.
 
 -# Common Issues
 
@@ -104,3 +188,10 @@ When generating `baseline.yaml` for a switching lab (e.g., VLANs, STP):
 - SW1 (Layer 2 switch, 12 access ports): `c3725` — NM-16ESW in slot 1 provides fa1/0–fa1/15
 - SW2 (Layer 2 switch): `c3725` — NM-16ESW required; no L3 routing features needed
 - R1 (default gateway / router-on-a-stick): `c7200` — routing role
+
+When a lab requires end-to-end reachability verification (e.g., "verify PC can reach remote subnet"):
+- PC1 (`vpcs`, type: vpcs) — connected to R1 fa1/0 on 192.168.10.0/24, gateway 192.168.10.1
+- PC2 (`vpcs`, type: vpcs) — connected to R3 fa1/0 on 192.168.30.0/24, gateway 192.168.30.1
+- Console ports: PC1 → 5020, PC2 → 5021
+- `initial-configs/PC1.vpc`: `ip 192.168.10.2/24 192.168.10.1`
+- Workbook verification step: `PC1> ping 192.168.30.2`
