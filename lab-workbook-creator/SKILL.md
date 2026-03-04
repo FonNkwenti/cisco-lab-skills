@@ -19,7 +19,62 @@ Before generating anything, read:
 
 Identify which devices are active for this lab number from `baseline.yaml labs[N].devices`.
 
---# Step 2: Generate workbook.md
+--# Step 2: Generate & Verify Solutions
+
+Generate complete solution configs for all active devices, verify every command
+against live routers, then write verified configs to disk.
+
+### 2a — Draft solutions
+
+Draft the full IOS config for each active device in memory, implementing all lab
+objectives. Do not write files yet.
+
+### 2b — Extract commands by context
+
+Parse the draft configs and collect unique (command, context) pairs:
+- Lines at global config level → `global`
+- Under `interface X` → `interface`
+- Under `router eigrp [NAME]` (named string) → `router-eigrp-named`
+- Under `router eigrp [N]` (numeric AS) → `router-eigrp`
+- Under `address-family ipv4 unicast` → `af-ipv4-unicast`
+- Under `router ospf N` → `router-ospf`
+- Under `router bgp N` → `router-bgp`
+
+### 2c — Check compatibility record
+
+Read `reference-docs/ios-compatibility.yaml`. For each (command, context) pair:
+- `pass` on target platform → OK, proceed
+- `fail` on target platform → go to 2e
+- `unknown` → add to verification list for 2d
+
+### 2d — Verify unknowns (if any)
+
+Write unknown commands to `_verify_input.yaml` in project root:
+
+```yaml
+commands:
+  - command: "..."
+    context: "..."
+```
+
+Run: `python3 scripts/verify_ios_commands.py _verify_input.yaml`
+
+Re-read `reference-docs/ios-compatibility.yaml`. Delete `_verify_input.yaml`.
+
+### 2e — Resolve failures
+
+For any command that is `fail` on the target platform:
+- If `pass` on c7200: switch the affected device to c7200 in the draft config.
+  Log the platform change as a note in `decisions.md`. Proceed.
+- If `fail` on both platforms: do not use the command. Remove it from the draft
+  and adjust the lab objective to use a supported alternative. Alert the user.
+
+### 2f — Write solutions/ to disk
+
+Only after all commands are `pass` on their target platform: write one `.cfg` file
+per active device to `solutions/`. Do not write partial or unverified configs.
+
+--# Step 3: Generate workbook.md
 
 **Table of Contents (required):** Immediately after the workbook title line, insert a TOC block before Section 1. Use Markdown anchor links matching the exact section headings. Required format:
 
@@ -364,16 +419,12 @@ For `capstone_ii`, Section 5 heading and opening must be:
 > No step-by-step guidance is provided — work from symptoms only.
 ```
 
---# Step 3: Generate initial-configs/
+--# Step 4: Generate initial-configs/
 
 - **Lab 01:** Generate base IP addressing from `baseline.yaml core_topology` (IP config only — no routing protocol config).
 - **Lab N (N > 1, not capstone):** Copy exactly from Lab (N-1) `solutions/`. Do not modify.
 - **Capstone I or Capstone II (`clean_slate: true`):** Generate from `baseline.yaml core_topology` IP addressing only — do NOT copy previous lab solutions. All routing protocol config is absent; the student configures everything from scratch.
 - One `.cfg` file per active device, named `[Device].cfg`.
-
---# Step 4: Generate solutions/
-
-Complete IOS configurations for every active device, implementing all lab objectives. One `.cfg` file per device.
 
 --# Step 5: Generate topology.drawio
 
@@ -510,9 +561,9 @@ User: "Generate EIGRP Lab 06 for the ENARSI series."
 
 Actions:
 1. Read `labs/eigrp/baseline.yaml` — identify Lab 06 devices, objectives, console ports.
-2. Copy `labs/eigrp/lab-05-[name]/solutions/` as `initial-configs/` for Lab 06.
-3. Write `workbook.md` with all 10 required sections.
-4. Generate `initial-configs/` and `solutions/` in main context.
+2. Draft solution configs in memory; verify all commands against `reference-docs/ios-compatibility.yaml`; write verified configs to `solutions/`.
+3. Write `workbook.md` with all 10 required sections (commands and cheatsheets are now verified).
+4. Copy `labs/eigrp/lab-05-[name]/solutions/` as `initial-configs/` for Lab 06.
 5. Dispatch drawio subagent (Step 5) to write `topology.drawio`.
 6. Generate `setup_lab.py` in main context.
 7. Invoke `fault-injector` skill to generate `scripts/fault-injection/`.
