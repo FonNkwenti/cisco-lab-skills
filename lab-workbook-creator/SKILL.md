@@ -68,6 +68,9 @@ For any command that is `fail` on the target platform:
   Log the platform change as a note in `decisions.md`. Proceed.
 - If `fail` on both platforms: do not use the command. Remove it from the draft
   and adjust the lab objective to use a supported alternative. Alert the user.
+  Log the dropped command and affected blueprint bullet to `memory/decisions.md`.
+  Verify the remaining lab objectives still cover all `baseline.yaml labs[N].objectives` entries —
+  if any objective loses its only implementing command, STOP and escalate to the user.
 
 ### 2f — Write solutions/ to disk
 
@@ -489,6 +492,8 @@ The script must:
 3. Load the corresponding `initial-configs/[Device].cfg`
 4. Log progress clearly per device
 
+**Validate:** Run `python3 -m py_compile setup_lab.py` — fix any SyntaxError before proceeding.
+
 --# Step 7: Invoke fault-injector skill
 
 After generating the workbook, invoke the `fault-injector` skill to create `scripts/fault-injection/` scripts based on the troubleshooting scenarios in the workbook.
@@ -528,6 +533,12 @@ updated: []
 ```
 
 List every file actually created — adjust device names and inject script count to match the lab.
+
+--# Step 9: Update Progress & Mindmap
+
+After `meta.yaml` is written:
+1. Update `memory/progress.md` — set the status row for this lab to "Review Needed".
+2. Update the `README.md` mindmap — set the lab node to `◉ Lab NN <name>`.
 
 -# Common Issues
 

@@ -50,6 +50,7 @@ Use `assets/README_template.md` as the base. Fill in:
 - [ ] `README.md` lists all available scenarios
 - [ ] All scripts are idempotent (safe to run multiple times)
 - [ ] Console ports match the workbook's Console Access Table
+- [ ] Run `python3 -m py_compile` on every generated `.py` file — fix any SyntaxError before proceeding
 
 --# Step 6: Update meta.yaml
 

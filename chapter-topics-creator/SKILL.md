@@ -60,7 +60,7 @@ meta:
     date: "[YYYY-MM-DD]"
     agent: claude-sonnet-4-6
     skill: chapter-topics
-    skill_version: "[date of .agent/skills HEAD]"
+    skill_version: "[date of .agent/skills HEAD]"  # run: git -C .agent/skills log --format='%ci' -1
   updated: []
 
 # Core devices — present in ALL labs
@@ -150,6 +150,12 @@ Before finishing, confirm:
 - [ ] IP addresses are pre-reserved for all optional devices even if not active in early labs
 - [ ] The last 2 labs are Capstone I (`type: capstone_i`) and Capstone II (`type: capstone_ii`), both with `clean_slate: true`
 
+--# Step 6: Update Progress & Mindmap
+
+After `baseline.yaml` and the chapter-spec.md backfill are complete:
+1. Update `memory/progress.md` — set the baseline row for this chapter to "Approved" (baseline is immediately usable for lab generation).
+2. Update the `README.md` mindmap — add the chapter branch with `✓ baseline.yaml` and all planned labs as `○ Lab NN <name>`.
+
 -# Continuity Rules
 
 1. **Core devices** maintain consistent IPs across ALL labs
@@ -161,7 +167,7 @@ Before finishing, confirm:
 
 --# Exam objectives list is incomplete
 - **Cause:** User did not provide a full list, or `specs/[chapter]/chapter-spec.md` has unfilled sections.
-- **Solution:** Read `specs/exam-blueprint.md` for the full ENARSI 300-410 blueprint and cross-reference the chapter section. Ask the user to confirm before generating.
+- **Solution:** Read `reference-docs/300-410-ENARSI-v1.1-7-2025 exam topics.md` for the full ENARSI 300-410 blueprint and cross-reference the chapter section. Ask the user to confirm before generating.
 
 --# baseline.yaml already exists
 - **Cause:** A previous baseline was generated for this chapter.

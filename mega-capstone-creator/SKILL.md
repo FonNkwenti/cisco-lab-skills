@@ -31,14 +31,14 @@ The Mega Capstone uses approximately 10 routers covering all 7 domains. Write `l
 | Device | Platform | Role | Domain |
 |--------|----------|------|--------|
 | R1 | c7200 | EIGRP Hub / DMVPN Hub | EIGRP, VPN |
-| R2 | c3725 | EIGRP Branch A / DMVPN Spoke | EIGRP, VPN |
-| R3 | c3725 | EIGRP Branch B / DMVPN Spoke | EIGRP, VPN |
+| R2 | c7200 | EIGRP Branch A / DMVPN Spoke | EIGRP, VPN |
+| R3 | c7200 | EIGRP Branch B / DMVPN Spoke | EIGRP, VPN |
 | R4 | c7200 | OSPF ABR (Area 0 / Area 1) / EIGRP-OSPF Redistribution Boundary | OSPF, Redistribution |
-| R5 | c3725 | OSPF Area 1 Internal | OSPF |
+| R5 | c7200 | OSPF Area 1 Internal | OSPF |
 | R6 | c7200 | eBGP Edge / OSPF-BGP Redistribution Boundary / Edge Security | BGP, Redistribution, Security |
-| R7 | c3725 | OSPF Area 0 Internal | OSPF |
-| R8 | c3725 | Services Router (DHCP server, IP SLA source) | Infrastructure Services |
-| R9 | c3725 | IP SLA target / SNMP management | Infrastructure Services |
+| R7 | c7200 | OSPF Area 0 Internal | OSPF |
+| R8 | c7200 | Services Router (DHCP server, IP SLA source) | Infrastructure Services |
+| R9 | c7200 | IP SLA target / SNMP management | Infrastructure Services |
 | SW1 | — | VPCS / syslog+SNMP collector (simulated as loopback on R9) | Infrastructure Services |
 
 **Addressing plan (fresh — do not reuse chapter subnets):**
@@ -146,6 +146,8 @@ Two groups: "Domain Configuration" (7 checkboxes) and "Troubleshooting Scenarios
 
 --# Step 5: Generate initial-configs/
 
+> **IOS Compatibility:** Before writing any config in Steps 5 and 6, check commands against `reference-docs/ios-compatibility.yaml` (if it exists). For commands not in the file, follow the 2a–2f verification sub-steps from `lab-workbook-creator/SKILL.md`.
+
 Clean slate — IP addressing only. No routing protocols, no VPN, no ACLs, no DHCP.
 
 One `.cfg` per active device. Each config contains:
@@ -190,6 +192,47 @@ Netmiko script connecting to all 9 devices via `cisco_ios_telnet` on ports 5011�
 - `README.md` — Ops-only (no challenge descriptions; reference workbook.md Section 9)
 
 Invoke the `fault-injector` skill to generate these based on the Section 9 ticket descriptions.
+
+--# Step 10: Write meta.yaml
+
+After the fault-injector skill completes, write `labs/mega-capstone/meta.yaml`.
+
+1. Get `skill_version`: run `git -C .agent/skills log --format="%ci" -1` and take the date portion (YYYY-MM-DD).
+2. Get today's date (YYYY-MM-DD).
+3. Glob all files created in this lab directory (recursive, relative paths).
+4. Write `labs/mega-capstone/meta.yaml`:
+
+```yaml
+# Auto-generated — do not edit manually. Use /tag-lab to stamp external agent runs.
+lab: mega-capstone
+chapter: mega-capstone
+created:
+  date: "[YYYY-MM-DD]"
+  agent: claude-sonnet-4-6
+  skill: mega-capstone
+  skill_version: "[YYYY-MM-DD]"
+  files:
+    - baseline.yaml
+    - workbook.md
+    - topology.drawio
+    - setup_lab.py
+    - initial-configs/R1.cfg
+    # ... one entry per device
+    - solutions/R1.cfg
+    # ... one entry per device
+    - scripts/fault-injection/inject_scenario_01.py
+    # ... one per scenario
+    - scripts/fault-injection/apply_solution.py
+    - scripts/fault-injection/README.md
+updated: []
+```
+
+List every file actually created — adjust device names and inject script count to match.
+
+--# Step 11: Update Progress & Mindmap
+
+1. Update `memory/progress.md` — add a Mega Capstone row with status "Review Needed".
+2. Update the `README.md` mindmap — add a Mega Capstone branch with `◉ Mega Capstone`.
 
 -# Output Directory
 

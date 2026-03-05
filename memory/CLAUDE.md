@@ -32,8 +32,8 @@ Every lab directory MUST contain:
 - `setup_lab.py` — Netmiko telnet automation
 
 Every workbook MUST include:
-- At least 3 troubleshooting scenarios (Section 8)
-- Solutions wrapped in `<details>` spoiler blocks (Section 9)
+- At least 3 troubleshooting scenarios (Section 9)
+- Solutions wrapped in `<details>` spoiler blocks (Section 8)
 - Console Access Table with telnet port per device
 - `scripts/fault-injection/` with `inject_scenario_0N.py` + `apply_solution.py`
 

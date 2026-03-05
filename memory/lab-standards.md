@@ -30,10 +30,9 @@ labs/[chapter]/lab-NN-[name]/
 | 5 | Lab Challenge: Core Implementation | Challenge-first, no step hints |
 | 6 | Verification & Analysis | |
 | 7 | Verification Cheatsheet | |
-| 8 | Troubleshooting Scenarios | Min 3, each with fault-injection reference |
-| 9 | Solutions (Spoiler Alert!) | All in `<details>` blocks |
+| 8 | Solutions (Spoiler Alert!) | All in `<details>` blocks |
+| 9 | Troubleshooting Scenarios | Min 3, each with fault-injection reference |
 | 10 | Lab Completion Checklist | |
-| 11 | Automated Fault Injection | When scripts exist |
 
 ## Voice & Tone
 

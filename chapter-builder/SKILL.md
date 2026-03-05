@@ -21,9 +21,10 @@ Generate Lab 01 using the `lab-workbook-creator` skill.
 --# Step 3: Generate Subsequent Labs (N = 2, 3, ...)
 For each subsequent lab number:
 1. Identify active devices from `labs[N].devices`.
-2. Set `initial-configs/` by copying exactly from Lab (N-1) `solutions/`.
-3. Add new devices ONLY if `labs[N].devices` introduces them beyond the previous lab.
-4. Use the `lab-workbook-creator` skill to generate: `workbook.md`, `initial-configs/`, `solutions/`, and `topology.drawio`.
+2. **Capstone check first:** If `labs[N].type` is `capstone_i` or `capstone_ii` (or `clean_slate: true`), generate `initial-configs/` from `baseline.yaml core_topology` IP addressing only — do NOT copy from Lab (N-1) solutions.
+3. Otherwise, set `initial-configs/` by copying exactly from Lab (N-1) `solutions/`.
+4. Add new devices ONLY if `labs[N].devices` introduces them beyond the previous lab.
+5. Use the `lab-workbook-creator` skill to generate: `workbook.md`, `initial-configs/`, `solutions/`, and `topology.drawio`.
 
 > **Note:** Fault injection scripts are generated automatically by `lab-workbook-creator` Step 7 (which invokes the `fault-injector` skill). No separate fault-injection step is needed here.
 
@@ -69,6 +70,8 @@ After generating all labs, verify:
 | 02 | Lab 01 `solutions/` | As declared |
 | 03 | Lab 02 `solutions/` | As declared |
 | N  | Lab (N-1) `solutions/` | As declared in `labs[N].devices` |
+| Capstone I (`capstone_i`) | `baseline.yaml` core_topology (IP only) — never chained | All active devices |
+| Capstone II (`capstone_ii`) | `baseline.yaml` core_topology (IP only) — never chained | All active devices |
 
 -# Examples
 

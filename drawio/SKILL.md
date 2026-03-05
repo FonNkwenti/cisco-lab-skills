@@ -104,6 +104,50 @@ Every diagram must include a legend box with the following properties:
   - Any cost or metric annotations
   - Protocol identifiers (OSPF Process ID, EIGRP AS, etc.)
 
+### 4.7 Reference XML Snippets
+
+**Title Cell:**
+```xml
+<mxCell id="title" value="Lab N: Title Here" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" vertex="1" parent="1">
+  <mxGeometry x="200" y="40" width="400" height="40" as="geometry" />
+</mxCell>
+```
+
+**Device Icon:**
+```xml
+<mxCell id="R1" value="" style="shape=mxgraph.cisco.routers.router;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
+  <mxGeometry x="400" y="200" width="78" height="53" as="geometry" />
+</mxCell>
+```
+
+**Device Label (left of icon):**
+```xml
+<mxCell id="R1_lbl" value="R1&#10;Hub/ABR&#10;10.1.1.1/32" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=1" vertex="1" parent="1">
+  <mxGeometry x="300" y="193" width="100" height="60" as="geometry" />
+</mxCell>
+```
+
+**White Connection Line:**
+```xml
+<mxCell id="link_R1_R2" value="" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#FFFFFF;fillColor=#f5f5f5;" edge="1" parent="1" source="R1" target="R2">
+  <mxGeometry relative="1" as="geometry" />
+</mxCell>
+```
+
+**IP Last Octet Label:**
+```xml
+<mxCell id="R1_Fa1_0_octet" value=".1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="1">
+  <mxGeometry x="450" y="260" as="geometry" />
+</mxCell>
+```
+
+**Legend Box:**
+```xml
+<mxCell id="legend" value="Legend&#10;--- Physical Link&#10;- - - Tunnel Link&#10;OSPF Process ID: 1&#10;Area 0 (Backbone)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;fontSize=10;align=left;verticalAlign=top;spacingLeft=8;spacingTop=8;" vertex="1" parent="1">
+  <mxGeometry x="600" y="700" width="180" height="100" as="geometry" />
+</mxCell>
+```
+
 ### 4.8 Layout Rules — Avoiding Link Overlap
 
 **Critical Rule**: A connection line must NEVER visually cross through an intermediate device. This happens when three or more devices share the same X coordinate in a vertical chain and a "bypass" link connects non-adjacent devices.
@@ -379,50 +423,6 @@ Since Draw.io legend cells are plain text, describe colors in words or use Unico
 | EIGRP                             | One ellipse per AS number if multiple ASes present      |
 | VRF / MPLS                        | One ellipse per VRF or MPLS domain if topologically relevant |
 | Single-protocol flat topology     | Zone shapes optional but recommended for clarity        |
-
-### 4.7 Reference XML Snippets
-
-**Title Cell:**
-```xml
-<mxCell id="title" value="Lab N: Title Here" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" vertex="1" parent="1">
-  <mxGeometry x="200" y="40" width="400" height="40" as="geometry" />
-</mxCell>
-```
-
-**Device Icon:**
-```xml
-<mxCell id="R1" value="" style="shape=mxgraph.cisco.routers.router;fillColor=#036897;strokeColor=#ffffff;strokeWidth=2;verticalLabelPosition=bottom;verticalAlign=top;align=center;outlineConnect=0;" vertex="1" parent="1">
-  <mxGeometry x="400" y="200" width="78" height="53" as="geometry" />
-</mxCell>
-```
-
-**Device Label (left of icon):**
-```xml
-<mxCell id="R1_lbl" value="R1&#10;Hub/ABR&#10;10.1.1.1/32" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;fontStyle=1" vertex="1" parent="1">
-  <mxGeometry x="300" y="193" width="100" height="60" as="geometry" />
-</mxCell>
-```
-
-**White Connection Line:**
-```xml
-<mxCell id="link_R1_R2" value="" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#FFFFFF;fillColor=#f5f5f5;" edge="1" parent="1" source="R1" target="R2">
-  <mxGeometry relative="1" as="geometry" />
-</mxCell>
-```
-
-**IP Last Octet Label:**
-```xml
-<mxCell id="R1_Fa1_0_octet" value=".1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;" vertex="1" connectable="0" parent="1">
-  <mxGeometry x="450" y="260" as="geometry" />
-</mxCell>
-```
-
-**Legend Box:**
-```xml
-<mxCell id="legend" value="Legend&#10;--- Physical Link&#10;- - - Tunnel Link&#10;OSPF Process ID: 1&#10;Area 0 (Backbone)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#FFFFFF;fontColor=#FFFFFF;fontSize=10;align=left;verticalAlign=top;spacingLeft=8;spacingTop=8;" vertex="1" parent="1">
-  <mxGeometry x="600" y="700" width="180" height="100" as="geometry" />
-</mxCell>
-```
 
 --# 5. Workflow
 
