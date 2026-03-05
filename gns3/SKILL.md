@@ -159,7 +159,7 @@ Base port: 5000. Assign sequentially — routers first, then VPCS nodes.
    `Source:Interface ↔ Target:Interface`
 4. **Supported node types (non-IOS):** Unmanaged Switch (generic GNS3 built-in); VPCS (see Section 4 — use only when a simulated end-host is needed, not by default).
 5. **Device count:** Minimum 3 routers, maximum 15 routers per chapter topology (core + optional combined). VPCS nodes do not count toward the router limit.
-6. **Platform-command alignment:** Before generating configs, confirm the IOS image version supports the required syntax. Check `reference-docs/ios-compatibility.yaml`. Named-mode EIGRP and any IOS 15+ feature must use c7200. If a command is `fail` on the target platform, switch to c7200 or find a supported alternative.
+6. **Platform-command alignment:** Before generating configs, confirm the IOS image version supports the required syntax. Check `.agent/skills/reference-data/ios-compatibility.yaml`. Named-mode EIGRP and any IOS 15+ feature must use c7200. If a command is `fail` on the target platform, switch to c7200 or find a supported alternative.
 7. **VPCS config files use `.vpc` extension** — never `.cfg`. Place them in `initial-configs/` alongside router configs.
 
 -# Common Issues

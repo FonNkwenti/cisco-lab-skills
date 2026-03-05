@@ -146,7 +146,7 @@ Two groups: "Domain Configuration" (7 checkboxes) and "Troubleshooting Scenarios
 
 --# Step 5: Generate initial-configs/
 
-> **IOS Compatibility:** Before writing any config in Steps 5 and 6, check commands against `reference-docs/ios-compatibility.yaml` (if it exists). For commands not in the file, follow the 2a–2f verification sub-steps from `lab-workbook-creator/SKILL.md`.
+> **IOS Compatibility:** Before writing any config in Steps 5 and 6, check commands against `.agent/skills/reference-data/ios-compatibility.yaml`. For commands not in the file, follow the 2a–2f verification sub-steps from `lab-workbook-creator/SKILL.md`.
 
 Clean slate — IP addressing only. No routing protocols, no VPN, no ACLs, no DHCP.
 

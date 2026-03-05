@@ -42,7 +42,7 @@ Parse the draft configs and collect unique (command, context) pairs:
 
 ### 2c — Check compatibility record
 
-Read `reference-docs/ios-compatibility.yaml`. For each (command, context) pair:
+Read `.agent/skills/reference-data/ios-compatibility.yaml`. For each (command, context) pair:
 - `pass` on target platform → OK, proceed
 - `fail` on target platform → go to 2e
 - `unknown` → add to verification list for 2d
@@ -57,9 +57,9 @@ commands:
     context: "..."
 ```
 
-Run: `python3 scripts/verify_ios_commands.py _verify_input.yaml`
+Run: `python3 .agent/skills/scripts/verify_ios_commands.py _verify_input.yaml`
 
-Re-read `reference-docs/ios-compatibility.yaml`. Delete `_verify_input.yaml`.
+Re-read `.agent/skills/reference-data/ios-compatibility.yaml`. Delete `_verify_input.yaml`.
 
 ### 2e — Resolve failures
 
@@ -572,7 +572,7 @@ User: "Generate EIGRP Lab 06 for the ENARSI series."
 
 Actions:
 1. Read `labs/eigrp/baseline.yaml` — identify Lab 06 devices, objectives, console ports.
-2. Draft solution configs in memory; verify all commands against `reference-docs/ios-compatibility.yaml`; write verified configs to `solutions/`.
+2. Draft solution configs in memory; verify all commands against `.agent/skills/reference-data/ios-compatibility.yaml`; write verified configs to `solutions/`.
 3. Write `workbook.md` with all 10 required sections (commands and cheatsheets are now verified).
 4. Copy `labs/eigrp/lab-05-[name]/solutions/` as `initial-configs/` for Lab 06.
 5. Dispatch drawio subagent (Step 5) to write `topology.drawio`.
